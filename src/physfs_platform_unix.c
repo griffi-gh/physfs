@@ -338,6 +338,7 @@ char *__PHYSFS_platformCalcBaseDir(const char *argv0)
 
 char *__PHYSFS_platformCalcPrefDir(const char *org, const char *app)
 {
+#ifndef PSP
     /*
      * We use XDG's base directory spec, even if you're not on Linux.
      *  This isn't strictly correct, but the results are relatively sane
@@ -357,6 +358,12 @@ char *__PHYSFS_platformCalcPrefDir(const char *org, const char *app)
         BAIL_IF_ERRPASS(!envr, NULL);  /* oh well. */
         append = ".local/share/";
     } /* if */
+#else
+    const char *envr = "ms0:/DATA/"; // TODO sth better than this
+    const char *append = "";
+    const char *retval = NULL;
+    size_t len = 0;
+#endif
 
     len = strlen(envr) + strlen(append) + strlen(app) + 2;
     retval = (char *) allocator.Malloc(len);
@@ -368,4 +375,3 @@ char *__PHYSFS_platformCalcPrefDir(const char *org, const char *app)
 #endif /* PHYSFS_PLATFORM_UNIX */
 
 /* end of physfs_platform_unix.c ... */
-
